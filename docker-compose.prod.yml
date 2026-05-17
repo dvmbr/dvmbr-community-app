@@ -1,0 +1,25 @@
+services:
+  web:
+    image: ghcr.io/dvmbr/dvmbr-community-app-web:latest
+    environment:
+      NODE_ENV: production
+    expose:
+      - "3000"
+
+  api:
+    image: ghcr.io/dvmbr/dvmbr-community-app-api:latest
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+    expose:
+      - "3001"
+
+  nginx:
+    image: nginx:1.30-alpine
+    depends_on:
+      - web
+      - api
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
