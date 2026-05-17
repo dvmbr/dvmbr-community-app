@@ -20,8 +20,8 @@ env:
   API_IMAGE: ghcr.io/dvmbr/dvmbr-community-app-api
 
 jobs:
-  deploy:
-    name: Build, push, and deploy
+  build:
+    name: Build and push images
     runs-on: ubuntu-latest
 
     steps:
@@ -58,24 +58,20 @@ jobs:
             ${{ env.API_IMAGE }}:latest
             ${{ env.API_IMAGE }}:${{ github.sha }}
 
-      - name: Configure SSH
-        run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          printf '%s\n' "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/ec2_key
-          chmod 600 ~/.ssh/ec2_key
-          touch ~/.ssh/known_hosts
+  deploy:
+    name: Deploy on EC2
+    needs: build
+    runs-on: self-hosted
 
+    steps:
       - name: Deploy on EC2
         run: |
-          ssh -T -i ~/.ssh/ec2_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10 -o ConnectionAttempts=1 "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" << 'EOF'
-            set -e
+          set -e
 
-            cd /home/ubuntu/dvmbr-community-app
-            git fetch origin main
-            git reset --hard origin/main
+          cd /home/ubuntu/dvmbr-community-app
+          git fetch origin main
+          git reset --hard origin/main
 
-            docker compose -f docker-compose.prod.yml pull
-            docker compose -f docker-compose.prod.yml up -d
-            docker image prune -f
-          EOF
+          docker compose -f docker-compose.prod.yml pull
+          docker compose -f docker-compose.prod.yml up -d
+          docker image prune -f
