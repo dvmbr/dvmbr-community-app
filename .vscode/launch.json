@@ -1,0 +1,37 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "API: Nest Debug",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder:api}",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["start:debug"],
+      "console": "integratedTerminal",
+      "restart": true,
+      "autoAttachChildProcesses": true,
+      "sourceMaps": true
+    },
+    {
+      "name": "Web: Next Dev",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder:web}",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev"],
+      "console": "integratedTerminal",
+      "serverReadyAction": {
+        "pattern": "Local:\\s+(https?://localhost:\\d+)",
+        "uriFormat": "%s",
+        "action": "openExternally"
+      }
+    },
+  ],
+  "compounds": [
+    {
+      "name": "Debug: Web + API",
+      "configurations": ["API: Nest Debug", "Web: Next Dev"],
+    }
+  ]
+}

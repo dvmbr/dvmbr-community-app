@@ -1,0 +1,34 @@
+{
+  "folders": [
+    {
+      "name": "repo-config",
+      "path": "."
+    },
+    {
+      "name": "web",
+      "path": "apps/web"
+    },
+    {
+      "name": "api",
+      "path": "apps/api"
+    },
+    {
+      "name": "shared",
+      "path": "packages/shared"
+    },
+    {
+      "name": "docs",
+      "path": "docs"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/.next": true,
+      "**/dist": true,
+      "apps": true,
+      "packages": true,
+      "docs": true
+    }
+  }
+}
