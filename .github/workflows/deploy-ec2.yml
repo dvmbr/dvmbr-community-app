@@ -68,7 +68,7 @@ jobs:
 
       - name: Deploy on EC2
         run: |
-          ssh -i ~/.ssh/ec2_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" << 'EOF'
+          ssh -T -i ~/.ssh/ec2_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10 -o ConnectionAttempts=1 "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" << 'EOF'
             set -e
 
             cd /home/ubuntu/dvmbr-community-app
