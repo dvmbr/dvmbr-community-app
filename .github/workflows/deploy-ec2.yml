@@ -20,8 +20,30 @@ env:
   API_IMAGE: ghcr.io/dvmbr/dvmbr-community-app-api
 
 jobs:
+  check-ec2:
+    name: Check EC2 availability
+    runs-on: ubuntu-latest
+    outputs:
+      reachable: ${{ steps.reachability.outputs.reachable }}
+
+    steps:
+      - name: Check HTTP port reachability
+        id: reachability
+        run: |
+          set +e
+
+          if timeout 10 bash -c "</dev/tcp/${{ secrets.EC2_HOST }}/80"; then
+            echo "reachable=true" >> "$GITHUB_OUTPUT"
+            echo "EC2 is reachable on port 80."
+          else
+            echo "reachable=false" >> "$GITHUB_OUTPUT"
+            echo "EC2 is not reachable on port 80. Build and deploy will be skipped."
+          fi
+
   build:
     name: Build and push images
+    needs: check-ec2
+    if: ${{ needs.check-ec2.outputs.reachable == 'true' }}
     runs-on: ubuntu-latest
 
     steps:
