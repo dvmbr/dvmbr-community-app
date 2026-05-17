@@ -1,0 +1,15 @@
+node_modules
+apps/*/node_modules
+packages/*/node_modules
+.next
+apps/*/.next
+dist
+apps/*/dist
+coverage
+.turbo
+.pnpm-store
+.git
+.github
+.env
+.env.*
+.DS_Store
