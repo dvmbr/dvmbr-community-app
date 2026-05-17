@@ -6,6 +6,10 @@
 
 이 문서는 `docs/02-ec2-deployment.md`의 EC2 생성과 SSH 접속이 완료된 뒤 진행합니다.
 
+현재 최종 배포 방식은 GitHub Actions에서 Docker image를 빌드하고 EC2에서는 image를 pull하는 방식입니다. 자동 배포 구성은 `docs/04-github-actions-deployment.md`에 정리합니다.
+
+이 문서의 `docker compose up -d --build` 방식은 EC2에서 직접 build까지 수행하는 초기 수동 검증 절차로 남겨둡니다.
+
 ## Docker APT 키 등록 방식 (공식 출처)
 
 `apt-key` 방식은 deprecated 되었기 때문에, 최근에는 `/etc/apt/keyrings` 경로에 키를 저장하고 APT source에서 `Signed-By`로 키를 참조하는 방식이 권장됩니다.
@@ -126,6 +130,15 @@ repository clone 후 프로젝트 루트에서 실행합니다.
 
 ```bash
 docker compose up -d --build
+```
+
+이 명령은 EC2에서 직접 Docker image를 build합니다. 초기 확인에는 단순하지만, `t3.micro`처럼 메모리가 작은 인스턴스에서는 build 중 메모리 부족이 날 수 있습니다.
+
+현재 운영 배포에서는 아래처럼 production compose를 사용해 GHCR image를 pull합니다.
+
+```bash
+docker compose -f docker-compose.prod.yml pull
+docker compose -f docker-compose.prod.yml up -d
 ```
 
 실행 상태 확인:

@@ -40,7 +40,7 @@ ap-northeast-2
 생성한 EC2 인스턴스 설정은 다음과 같습니다.
 
 ```txt
-Name: dvmbr-community-app-server
+Name: dvmbr-community-app-ec2
 AMI: Ubuntu Server 24.04 LTS
 Architecture: 64-bit x86
 Instance type: t3.micro
@@ -153,8 +153,3 @@ VS Code 접속 순서:
 VS Code Remote SSH 연결을 해제하려면 왼쪽 아래 원격 연결 표시를 클릭한 뒤 `Close Remote Connection`을 선택합니다.
 
 주의: VS Code 연결을 해제해도 EC2 인스턴스는 계속 실행 중입니다. 비용을 멈추려면 AWS 콘솔에서 인스턴스를 `Stop` 해야 합니다.
-
-```txt
-http://54.180.109.3      → web
-http://54.180.109.3/api  → api
-```
